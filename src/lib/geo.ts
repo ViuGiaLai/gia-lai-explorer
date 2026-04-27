@@ -14,7 +14,18 @@ export function haversine(
 
 export function youtubeEmbedFromUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  if (url.includes("/embed/")) return url;
+  
+  // Nếu đã là link embed, chuẩn hóa lại để loại bỏ params thừa
+  if (url.includes("/embed/")) {
+    const match = url.match(/\/embed\/([a-zA-Z0-9_-]+)/);
+    if (match) {
+      return `https://www.youtube.com/embed/${match[1]}`;
+    }
+    // Fallback: cắt bỏ query params nếu không match
+    return url.split('?')[0].split('&')[0];
+  }
+  
+  // Xử lý các dạng link YouTube khác (youtu.be, watch, shorts)
   const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([\w-]{11})/);
-  return m ? `https://www.youtube.com/embed/${m[1]}` : url;
+  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
 }
