@@ -10,6 +10,7 @@ import { LocationCard } from "@/components/LocationCard";
 import { Button } from "@/components/ui/button";
 import { haversine, youtubeEmbedFromUrl } from "@/lib/geo";
 import { isSaved, toggleSaved } from "@/lib/saved-locations";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/dia-diem/$slug")({
   loader: async ({ params }) => {
@@ -33,8 +34,13 @@ export const Route = createFileRoute("/dia-diem/$slug")({
         { property: "og:title", content: `${location.name} — Du Lịch Gia Lai` },
         { property: "og:description", content: location.short_description },
         ...(cover ? [{ property: "og:image", content: cover }] : []),
+        { property: "og:url", content: buildCanonicalUrl(`/dia-diem/${location.slug}`) },
+        { name: "twitter:title", content: `${location.name} — Du Lịch Gia Lai` },
+        { name: "twitter:description", content: location.short_description },
+        ...(cover ? [{ name: "twitter:image", content: cover }] : []),
         { property: "og:type", content: "article" },
       ],
+      links: [{ rel: "canonical", href: buildCanonicalUrl(`/dia-diem/${location.slug}`) }],
       scripts: [
         {
           type: "application/ld+json",

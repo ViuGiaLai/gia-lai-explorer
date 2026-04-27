@@ -4,6 +4,7 @@ import { MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/am-thuc")({
   head: () => ({
@@ -12,7 +13,9 @@ export const Route = createFileRoute("/am-thuc")({
       { name: "description", content: "Khám phá ẩm thực Gia Lai: phở khô hai tô, bún mắm cua, bò một nắng chấm muối kiến vàng, cơm lam gà nướng và nhiều món đặc sản khác." },
       { property: "og:title", content: "Ẩm thực Gia Lai — Đặc sản phố núi Pleiku" },
       { property: "og:description", content: "Cẩm nang đặc sản và quán ăn nổi tiếng tại Gia Lai." },
+      { property: "og:url", content: buildCanonicalUrl("/am-thuc") },
     ],
+    links: [{ rel: "canonical", href: buildCanonicalUrl("/am-thuc") }],
   }),
   component: FoodPage,
 });

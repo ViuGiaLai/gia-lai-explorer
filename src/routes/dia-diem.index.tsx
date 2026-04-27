@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { LocationCard } from "@/components/LocationCard";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/dia-diem/")({
   head: () => ({
@@ -12,7 +13,9 @@ export const Route = createFileRoute("/dia-diem/")({
       { name: "description", content: "Danh sách đầy đủ các địa điểm du lịch nổi bật ở Gia Lai: Biển Hồ, Chư Đăng Ya, thác Phú Cường, chùa Minh Thành, hồ Ia Ly và nhiều nơi khác." },
       { property: "og:title", content: "Tất cả địa điểm du lịch Gia Lai" },
       { property: "og:description", content: "Khám phá danh sách địa điểm du lịch ở Gia Lai với ảnh, video, bản đồ và mẹo du lịch chi tiết." },
+      { property: "og:url", content: buildCanonicalUrl("/dia-diem") },
     ],
+    links: [{ rel: "canonical", href: buildCanonicalUrl("/dia-diem") }],
   }),
   component: LocationsListPage,
 });

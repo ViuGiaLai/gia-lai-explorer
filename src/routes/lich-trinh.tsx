@@ -5,6 +5,7 @@ import { Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 interface Stop {
   day?: number;
@@ -21,7 +22,9 @@ export const Route = createFileRoute("/lich-trinh")({
       { name: "description", content: "Lịch trình chi tiết khám phá Gia Lai trong 1 ngày hoặc 2 ngày 1 đêm: từ Biển Hồ, Chư Đăng Ya đến hồ Ia Ly và ẩm thực phố núi." },
       { property: "og:title", content: "Lịch trình du lịch Gia Lai 1-2 ngày" },
       { property: "og:description", content: "Gợi ý lịch trình chi tiết theo giờ cho chuyến đi Gia Lai." },
+      { property: "og:url", content: buildCanonicalUrl("/lich-trinh") },
     ],
+    links: [{ rel: "canonical", href: buildCanonicalUrl("/lich-trinh") }],
   }),
   component: ItineraryPage,
 });
