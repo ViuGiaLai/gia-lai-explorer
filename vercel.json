@@ -1,10 +1,15 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/dist/server/index.js"
     }
   ]
 }
