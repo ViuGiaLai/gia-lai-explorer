@@ -40,7 +40,11 @@ function LoginPage() {
     if (mode === "signup") {
       toast.success("Đã tạo tài khoản. Liên hệ quản trị để được cấp quyền admin.");
     } else {
-      toast.success("Đăng nhập thành công");
+      toast.success("Đăng nhập thành công. Đang chuyển hướng...");
+      // Wait a tick for isAdmin to be updated by auth state change listener
+      setTimeout(() => {
+        navigate({ to: "/admin" });
+      }, 100);
     }
   }
 
