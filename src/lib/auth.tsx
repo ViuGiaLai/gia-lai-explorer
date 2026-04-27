@@ -49,11 +49,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function checkAdmin(userId: string) {
-    // Use the has_role function instead of querying user_roles directly
-    const { data } = await supabase.rpc("has_role", { 
-      _user_id: userId, 
-      _role: "admin" 
+    // Use the has_role function - it uses auth.uid() internally
+    const { data, error } = await supabase.rpc("has_role", { 
+      check_role: "admin" 
     });
+    if (error) {
+      console.error("Error checking admin role:", error);
+      setIsAdmin(false);
+      return;
+    }
     setIsAdmin(!!data);
   }
 
