@@ -5,8 +5,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth";
 import { buildCanonicalUrl } from "@/lib/seo";
 
-import appCss from "../styles.css?url";
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -47,7 +45,6 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#1f5f4d" },
     ],
     links: [
-      { rel: "stylesheet", href: appCss },
       { rel: "canonical", href: buildCanonicalUrl("/") },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -68,6 +65,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
       <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <HeadContent />
       </head>
       <body>
