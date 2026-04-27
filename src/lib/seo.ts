@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://du-lich-gia-lai.lovable.app";
+const FALLBACK_SITE_URL = "https://gialaiexplorer.vercel.app/";
 
 export function getSiteUrl() {
   return (
