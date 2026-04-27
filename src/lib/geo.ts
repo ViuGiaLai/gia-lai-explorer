@@ -15,17 +15,22 @@ export function haversine(
 export function youtubeEmbedFromUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   
+  const cleanUrl = url.trim();
+  
   // Nếu đã là link embed, chuẩn hóa lại để loại bỏ params thừa
-  if (url.includes("/embed/")) {
-    const match = url.match(/\/embed\/([a-zA-Z0-9_-]+)/);
-    if (match) {
-      return `https://www.youtube.com/embed/${match[1]}`;
+  if (cleanUrl.includes("/embed/")) {
+    const parts = cleanUrl.split("/embed/");
+    if (parts.length > 1) {
+      const rawId = parts[1].split("?")[0].split("&")[0].split("#")[0];
+      if (rawId.length === 11) {
+        return `https://www.youtube.com/embed/${rawId}`;
+      }
     }
-    // Fallback: cắt bỏ query params nếu không match
-    return url.split('?')[0].split('&')[0];
+    // Fallback: trả về null nếu không tìm thấy ID hợp lệ
+    return null;
   }
   
   // Xử lý các dạng link YouTube khác (youtu.be, watch, shorts)
-  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([\w-]{11})/);
+  const m = cleanUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([\w-]{11})/);
   return m ? `https://www.youtube.com/embed/${m[1]}` : null;
 }
