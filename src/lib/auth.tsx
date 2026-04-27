@@ -21,44 +21,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const syncAuthState = async (newSession: Session | null) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
-      if (newSession?.user) {
-        // Defer role check to avoid deadlock
-        setTimeout(() => {
-          checkAdmin(newSession.user.id);
-        }, 0);
-      } else {
+
+      if (!newSession?.user) {
         setIsAdmin(false);
+        return;
       }
+
+      const admin = await checkAdmin();
+      setIsAdmin(admin);
+    };
+
+    // Set up listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setLoading(true);
+      syncAuthState(newSession).finally(() => setLoading(false));
     });
 
     // Then check existing session
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      if (data.session?.user) {
-        checkAdmin(data.session.user.id);
-      }
+    supabase.auth.getSession().then(async ({ data }) => {
+      await syncAuthState(data.session);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  async function checkAdmin(userId: string) {
+  async function checkAdmin() {
     // Use the has_role function - it uses auth.uid() internally
     const { data, error } = await supabase.rpc("has_role", { 
       check_role: "admin" 
     });
     if (error) {
       console.error("Error checking admin role:", error);
-      setIsAdmin(false);
-      return;
+      return false;
     }
-    setIsAdmin(!!data);
+    return !!data;
   }
 
   const signIn = async (email: string, password: string) => {
