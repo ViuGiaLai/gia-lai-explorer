@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { LocationCard } from "@/components/LocationCard";
 import { Button } from "@/components/ui/button";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,7 +16,12 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Du Lịch Gia Lai — Khám phá vẻ đẹp cao nguyên Pleiku" },
       { property: "og:description", content: "Cẩm nang du lịch Gia Lai đầy đủ nhất: địa điểm, lịch trình, ẩm thực, video & bản đồ." },
       { property: "og:image", content: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80" },
+      { property: "og:url", content: buildCanonicalUrl("/") },
+      { name: "twitter:title", content: "Du Lịch Gia Lai — Khám phá vẻ đẹp cao nguyên Pleiku" },
+      { name: "twitter:description", content: "Cẩm nang du lịch Gia Lai đầy đủ nhất: địa điểm, lịch trình, ẩm thực, video & bản đồ." },
+      { name: "twitter:image", content: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80" },
     ],
+    links: [{ rel: "canonical", href: buildCanonicalUrl("/") }],
   }),
   component: HomePage,
 });
