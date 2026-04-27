@@ -24,10 +24,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     let roleCheckVersion = 0;
 
-    const syncAuthState = async (newSession: Session | null) => {
-      const currentVersion = ++roleCheckVersion;
+    const applySessionState = (newSession: Session | null) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
+    };
+
+    const syncAdminRole = async (newSession: Session | null) => {
+      const currentVersion = ++roleCheckVersion;
 
       if (!newSession?.user) {
         if (isMounted && currentVersion === roleCheckVersion) {
@@ -47,8 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Set up listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       // Avoid potential Supabase deadlocks: don't await other Supabase calls directly in this callback.
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
+      applySessionState(newSession);
 
       if (!newSession?.user) {
         setIsAdmin(false);
@@ -61,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setLoading(true);
       setTimeout(() => {
-        void syncAuthState(newSession);
+        void syncAdminRole(newSession);
       }, 0);
     });
 
@@ -69,7 +71,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!isMounted) return;
       setLoading(true);
-      await syncAuthState(data.session);
+      applySessionState(data.session);
+      await syncAdminRole(data.session);
     });
 
     return () => {
