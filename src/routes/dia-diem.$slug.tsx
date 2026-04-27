@@ -199,6 +199,7 @@ function LocationDetailPage() {
                   src={ytEmbed}
                   title={location.name}
                   loading="lazy"
+                  frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="h-full w-full"
@@ -215,6 +216,8 @@ function LocationDetailPage() {
                   src={location.map_embed}
                   title={`Bản đồ ${location.name}`}
                   loading="lazy"
+                  frameBorder="0"
+                  allowFullScreen
                   className="h-full w-full"
                 />
               </div>

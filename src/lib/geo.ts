@@ -14,23 +14,42 @@ export function haversine(
 
 export function youtubeEmbedFromUrl(url: string | null | undefined): string | null {
   if (!url) return null;
-  
+
   const cleanUrl = url.trim();
-  
+
   // Nếu đã là link embed, chuẩn hóa lại để loại bỏ params thừa
   if (cleanUrl.includes("/embed/")) {
     const parts = cleanUrl.split("/embed/");
     if (parts.length > 1) {
-      const rawId = parts[1].split("?")[0].split("&")[0].split("#")[0];
-      if (rawId.length === 11) {
+      const rawId = parts[1].split("?")[0].split("&")[0].split("#")[0].trim();
+      // Accept IDs with valid YouTube format (11 chars: alphanumeric, -, _)
+      if (rawId && rawId.match(/^[\w-]+$/)) {
         return `https://www.youtube.com/embed/${rawId}`;
       }
     }
-    // Fallback: trả về null nếu không tìm thấy ID hợp lệ
     return null;
   }
-  
+
   // Xử lý các dạng link YouTube khác (youtu.be, watch, shorts)
-  const m = cleanUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([\w-]{11})/);
-  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+  let videoId = null;
+
+  // youtu.be/VIDEO_ID
+  const youtubeShortMatch = cleanUrl.match(/youtu\.be\/([\w-]+)/);
+  if (youtubeShortMatch) {
+    videoId = youtubeShortMatch[1];
+  }
+
+  // youtube.com/watch?v=VIDEO_ID
+  const watchMatch = cleanUrl.match(/youtube\.com\/watch\?.*v=([\w-]+)/);
+  if (watchMatch) {
+    videoId = watchMatch[1];
+  }
+
+  // youtube.com/shorts/VIDEO_ID
+  const shortsMatch = cleanUrl.match(/youtube\.com\/shorts\/([\w-]+)/);
+  if (shortsMatch) {
+    videoId = shortsMatch[1];
+  }
+
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
 }
