@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth";
+import { buildCanonicalUrl } from "@/lib/seo";
 
 import appCss from "../styles.css?url";
 
@@ -38,11 +39,16 @@ export const Route = createRootRoute({
       { name: "author", content: "Du Lịch Gia Lai" },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "vi_VN" },
+      { property: "og:site_name", content: "Du Lịch Gia Lai" },
+      { property: "og:url", content: buildCanonicalUrl("/") },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Du Lịch Gia Lai — Khám phá vẻ đẹp cao nguyên Pleiku" },
+      { name: "twitter:description", content: "Cẩm nang du lịch Gia Lai: Biển Hồ, núi lửa Chư Đăng Ya, thác Phú Cường, chùa Minh Thành, ẩm thực và lịch trình chi tiết." },
       { name: "theme-color", content: "#1f5f4d" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: buildCanonicalUrl("/") },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
