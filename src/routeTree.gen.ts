@@ -9,38 +9,222 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LichTrinhRouteImport } from './routes/lich-trinh'
+import { Route as DaLuuRouteImport } from './routes/da-luu'
+import { Route as AmThucRouteImport } from './routes/am-thuc'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DiaDiemIndexRouteImport } from './routes/dia-diem.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as DiaDiemSlugRouteImport } from './routes/dia-diem.$slug'
+import { Route as AdminDiaDiemIndexRouteImport } from './routes/admin.dia-diem.index'
+import { Route as AdminDiaDiemIdRouteImport } from './routes/admin.dia-diem.$id'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LichTrinhRoute = LichTrinhRouteImport.update({
+  id: '/lich-trinh',
+  path: '/lich-trinh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DaLuuRoute = DaLuuRouteImport.update({
+  id: '/da-luu',
+  path: '/da-luu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AmThucRoute = AmThucRouteImport.update({
+  id: '/am-thuc',
+  path: '/am-thuc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiaDiemIndexRoute = DiaDiemIndexRouteImport.update({
+  id: '/dia-diem/',
+  path: '/dia-diem/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const DiaDiemSlugRoute = DiaDiemSlugRouteImport.update({
+  id: '/dia-diem/$slug',
+  path: '/dia-diem/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDiaDiemIndexRoute = AdminDiaDiemIndexRouteImport.update({
+  id: '/dia-diem/',
+  path: '/dia-diem/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDiaDiemIdRoute = AdminDiaDiemIdRouteImport.update({
+  id: '/dia-diem/$id',
+  path: '/dia-diem/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/am-thuc': typeof AmThucRoute
+  '/da-luu': typeof DaLuuRoute
+  '/lich-trinh': typeof LichTrinhRoute
+  '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/dia-diem/$slug': typeof DiaDiemSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/dia-diem/': typeof DiaDiemIndexRoute
+  '/admin/dia-diem/$id': typeof AdminDiaDiemIdRoute
+  '/admin/dia-diem/': typeof AdminDiaDiemIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/am-thuc': typeof AmThucRoute
+  '/da-luu': typeof DaLuuRoute
+  '/lich-trinh': typeof LichTrinhRoute
+  '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/dia-diem/$slug': typeof DiaDiemSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/dia-diem': typeof DiaDiemIndexRoute
+  '/admin/dia-diem/$id': typeof AdminDiaDiemIdRoute
+  '/admin/dia-diem': typeof AdminDiaDiemIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/am-thuc': typeof AmThucRoute
+  '/da-luu': typeof DaLuuRoute
+  '/lich-trinh': typeof LichTrinhRoute
+  '/login': typeof LoginRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/dia-diem/$slug': typeof DiaDiemSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/dia-diem/': typeof DiaDiemIndexRoute
+  '/admin/dia-diem/$id': typeof AdminDiaDiemIdRoute
+  '/admin/dia-diem/': typeof AdminDiaDiemIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/am-thuc'
+    | '/da-luu'
+    | '/lich-trinh'
+    | '/login'
+    | '/sitemap.xml'
+    | '/dia-diem/$slug'
+    | '/admin/'
+    | '/dia-diem/'
+    | '/admin/dia-diem/$id'
+    | '/admin/dia-diem/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/am-thuc'
+    | '/da-luu'
+    | '/lich-trinh'
+    | '/login'
+    | '/sitemap.xml'
+    | '/dia-diem/$slug'
+    | '/admin'
+    | '/dia-diem'
+    | '/admin/dia-diem/$id'
+    | '/admin/dia-diem'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/am-thuc'
+    | '/da-luu'
+    | '/lich-trinh'
+    | '/login'
+    | '/sitemap.xml'
+    | '/dia-diem/$slug'
+    | '/admin/'
+    | '/dia-diem/'
+    | '/admin/dia-diem/$id'
+    | '/admin/dia-diem/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AmThucRoute: typeof AmThucRoute
+  DaLuuRoute: typeof DaLuuRoute
+  LichTrinhRoute: typeof LichTrinhRoute
+  LoginRoute: typeof LoginRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  DiaDiemSlugRoute: typeof DiaDiemSlugRoute
+  DiaDiemIndexRoute: typeof DiaDiemIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lich-trinh': {
+      id: '/lich-trinh'
+      path: '/lich-trinh'
+      fullPath: '/lich-trinh'
+      preLoaderRoute: typeof LichTrinhRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/da-luu': {
+      id: '/da-luu'
+      path: '/da-luu'
+      fullPath: '/da-luu'
+      preLoaderRoute: typeof DaLuuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/am-thuc': {
+      id: '/am-thuc'
+      path: '/am-thuc'
+      fullPath: '/am-thuc'
+      preLoaderRoute: typeof AmThucRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,21 +232,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dia-diem/': {
+      id: '/dia-diem/'
+      path: '/dia-diem'
+      fullPath: '/dia-diem/'
+      preLoaderRoute: typeof DiaDiemIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/dia-diem/$slug': {
+      id: '/dia-diem/$slug'
+      path: '/dia-diem/$slug'
+      fullPath: '/dia-diem/$slug'
+      preLoaderRoute: typeof DiaDiemSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/dia-diem/': {
+      id: '/admin/dia-diem/'
+      path: '/dia-diem'
+      fullPath: '/admin/dia-diem/'
+      preLoaderRoute: typeof AdminDiaDiemIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dia-diem/$id': {
+      id: '/admin/dia-diem/$id'
+      path: '/dia-diem/$id'
+      fullPath: '/admin/dia-diem/$id'
+      preLoaderRoute: typeof AdminDiaDiemIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminDiaDiemIdRoute: typeof AdminDiaDiemIdRoute
+  AdminDiaDiemIndexRoute: typeof AdminDiaDiemIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminDiaDiemIdRoute: AdminDiaDiemIdRoute,
+  AdminDiaDiemIndexRoute: AdminDiaDiemIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AmThucRoute: AmThucRoute,
+  DaLuuRoute: DaLuuRoute,
+  LichTrinhRoute: LichTrinhRoute,
+  LoginRoute: LoginRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  DiaDiemSlugRoute: DiaDiemSlugRoute,
+  DiaDiemIndexRoute: DiaDiemIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
