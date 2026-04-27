@@ -9,9 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LichTrinhRouteImport } from './routes/lich-trinh'
+import { Route as DaLuuRouteImport } from './routes/da-luu'
+import { Route as AmThucRouteImport } from './routes/am-thuc'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DiaDiemIndexRouteImport } from './routes/dia-diem.index'
+import { Route as DiaDiemSlugRouteImport } from './routes/dia-diem.$slug'
 
+const LichTrinhRoute = LichTrinhRouteImport.update({
+  id: '/lich-trinh',
+  path: '/lich-trinh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DaLuuRoute = DaLuuRouteImport.update({
+  id: '/da-luu',
+  path: '/da-luu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AmThucRoute = AmThucRouteImport.update({
+  id: '/am-thuc',
+  path: '/am-thuc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -22,35 +41,96 @@ const DiaDiemIndexRoute = DiaDiemIndexRouteImport.update({
   path: '/dia-diem/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiaDiemSlugRoute = DiaDiemSlugRouteImport.update({
+  id: '/dia-diem/$slug',
+  path: '/dia-diem/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/am-thuc': typeof AmThucRoute
+  '/da-luu': typeof DaLuuRoute
+  '/lich-trinh': typeof LichTrinhRoute
+  '/dia-diem/$slug': typeof DiaDiemSlugRoute
   '/dia-diem/': typeof DiaDiemIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/am-thuc': typeof AmThucRoute
+  '/da-luu': typeof DaLuuRoute
+  '/lich-trinh': typeof LichTrinhRoute
+  '/dia-diem/$slug': typeof DiaDiemSlugRoute
   '/dia-diem': typeof DiaDiemIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/am-thuc': typeof AmThucRoute
+  '/da-luu': typeof DaLuuRoute
+  '/lich-trinh': typeof LichTrinhRoute
+  '/dia-diem/$slug': typeof DiaDiemSlugRoute
   '/dia-diem/': typeof DiaDiemIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dia-diem/'
+  fullPaths:
+    | '/'
+    | '/am-thuc'
+    | '/da-luu'
+    | '/lich-trinh'
+    | '/dia-diem/$slug'
+    | '/dia-diem/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dia-diem'
-  id: '__root__' | '/' | '/dia-diem/'
+  to:
+    | '/'
+    | '/am-thuc'
+    | '/da-luu'
+    | '/lich-trinh'
+    | '/dia-diem/$slug'
+    | '/dia-diem'
+  id:
+    | '__root__'
+    | '/'
+    | '/am-thuc'
+    | '/da-luu'
+    | '/lich-trinh'
+    | '/dia-diem/$slug'
+    | '/dia-diem/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AmThucRoute: typeof AmThucRoute
+  DaLuuRoute: typeof DaLuuRoute
+  LichTrinhRoute: typeof LichTrinhRoute
+  DiaDiemSlugRoute: typeof DiaDiemSlugRoute
   DiaDiemIndexRoute: typeof DiaDiemIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/lich-trinh': {
+      id: '/lich-trinh'
+      path: '/lich-trinh'
+      fullPath: '/lich-trinh'
+      preLoaderRoute: typeof LichTrinhRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/da-luu': {
+      id: '/da-luu'
+      path: '/da-luu'
+      fullPath: '/da-luu'
+      preLoaderRoute: typeof DaLuuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/am-thuc': {
+      id: '/am-thuc'
+      path: '/am-thuc'
+      fullPath: '/am-thuc'
+      preLoaderRoute: typeof AmThucRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,11 +145,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiaDiemIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dia-diem/$slug': {
+      id: '/dia-diem/$slug'
+      path: '/dia-diem/$slug'
+      fullPath: '/dia-diem/$slug'
+      preLoaderRoute: typeof DiaDiemSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AmThucRoute: AmThucRoute,
+  DaLuuRoute: DaLuuRoute,
+  LichTrinhRoute: LichTrinhRoute,
+  DiaDiemSlugRoute: DiaDiemSlugRoute,
   DiaDiemIndexRoute: DiaDiemIndexRoute,
 }
 export const routeTree = rootRouteImport

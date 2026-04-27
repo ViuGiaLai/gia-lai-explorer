@@ -166,7 +166,7 @@ function LocationDetailPage() {
 
             {location.images && location.images.length > 1 && (
               <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
-                {location.images.map((img, idx) => (
+                {location.images.map((img: string, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => setActiveImg(idx)}
