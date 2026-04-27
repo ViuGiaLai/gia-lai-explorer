@@ -139,10 +139,10 @@ function LocationDetailPage() {
               className="h-full w-full object-cover"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
         </div>
         <div className="container mx-auto -mt-24 px-4 md:-mt-32">
-          <div className="rounded-3xl bg-card p-6 shadow-elegant md:p-10">
+          <div className="relative rounded-3xl bg-card p-6 shadow-elegant md:p-10">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" /> Gia Lai
             </div>
@@ -166,7 +166,7 @@ function LocationDetailPage() {
 
             {location.images && location.images.length > 1 && (
               <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
-                {location.images.map((img: string, idx: number) => (
+                {location.images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActiveImg(idx)}
