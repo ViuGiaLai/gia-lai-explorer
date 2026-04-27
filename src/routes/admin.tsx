@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { LayoutDashboard, MapPin, LogOut, Mountain } from "lucide-react";
+import { LayoutDashboard, MapPin, Calendar, Utensils, LogOut, Mountain } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
@@ -31,6 +31,8 @@ function AdminLayout() {
   const navItems = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
     { to: "/admin/dia-diem", label: "Địa điểm", icon: MapPin },
+    { to: "/admin/lich-trinh", label: "Lịch trình", icon: Calendar },
+    { to: "/admin/am-thuc", label: "Món ăn", icon: Utensils },
   ];
 
   return (
