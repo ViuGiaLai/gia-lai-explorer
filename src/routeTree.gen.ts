@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LichTrinhRouteImport } from './routes/lich-trinh'
 import { Route as DaLuuRouteImport } from './routes/da-luu'
@@ -27,6 +28,11 @@ import { Route as AdminDiaDiemIdRouteImport } from './routes/admin.dia-diem.$id'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/da-luu': typeof DaLuuRoute
   '/lich-trinh': typeof LichTrinhRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/dia-diem/$slug': typeof DiaDiemSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/da-luu': typeof DaLuuRoute
   '/lich-trinh': typeof LichTrinhRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/dia-diem/$slug': typeof DiaDiemSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/da-luu': typeof DaLuuRoute
   '/lich-trinh': typeof LichTrinhRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/dia-diem/$slug': typeof DiaDiemSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/da-luu'
     | '/lich-trinh'
     | '/login'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/dia-diem/$slug'
     | '/admin/'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/da-luu'
     | '/lich-trinh'
     | '/login'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/dia-diem/$slug'
     | '/admin'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/da-luu'
     | '/lich-trinh'
     | '/login'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/dia-diem/$slug'
     | '/admin/'
@@ -200,6 +212,7 @@ export interface RootRouteChildren {
   DaLuuRoute: typeof DaLuuRoute
   LichTrinhRoute: typeof LichTrinhRoute
   LoginRoute: typeof LoginRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   DiaDiemSlugRoute: typeof DiaDiemSlugRoute
   DiaDiemIndexRoute: typeof DiaDiemIndexRoute
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -333,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   DaLuuRoute: DaLuuRoute,
   LichTrinhRoute: LichTrinhRoute,
   LoginRoute: LoginRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   DiaDiemSlugRoute: DiaDiemSlugRoute,
   DiaDiemIndexRoute: DiaDiemIndexRoute,
