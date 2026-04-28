@@ -44,7 +44,7 @@ function AdminLocationsList() {
           <p className="mt-1 text-sm text-muted-foreground">Quản lý tất cả địa điểm du lịch</p>
         </div>
         <Button asChild>
-          <Link to="/admin/dia-diem/moi"><Plus className="mr-2 h-4 w-4" /> Thêm địa điểm</Link>
+          <Link to="/admin/dia-diem/$id" params={{ id: "moi" }}><Plus className="mr-2 h-4 w-4" /> Thêm địa điểm</Link>
         </Button>
       </div>
 
