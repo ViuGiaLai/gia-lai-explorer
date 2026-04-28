@@ -132,7 +132,7 @@ function EditDialog({ id, onClose }: { id: string; onClose: () => void }) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<Itinerary>) => {
-      const { error } = await supabase.from("itineraries").update(updates).eq("id", id);
+      const { error } = await supabase.from("itineraries").update(updates as never).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
