@@ -56,9 +56,9 @@ function FoodList() {
           <p className="mt-1 text-sm text-muted-foreground">Thêm và chỉnh sửa đặc sản ẩm thực</p>
         </div>
         <Button asChild>
-          <Link to="/admin/am-thuc/moi">
+          <a href="/admin/am-thuc/moi">
             <Plus className="mr-2 h-4 w-4" /> Thêm mới
-          </Link>
+          </a>
         </Button>
       </div>
 
