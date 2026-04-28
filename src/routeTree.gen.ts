@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LichTrinhRouteImport } from './routes/lich-trinh'
 import { Route as DaLuuRouteImport } from './routes/da-luu'
 import { Route as AmThucRouteImport } from './routes/am-thuc'
+import { Route as AdminloginRouteImport } from './routes/adminlogin'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DiaDiemIndexRouteImport } from './routes/dia-diem.index'
@@ -53,6 +54,11 @@ const DaLuuRoute = DaLuuRouteImport.update({
 const AmThucRoute = AmThucRouteImport.update({
   id: '/am-thuc',
   path: '/am-thuc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminloginRoute = AdminloginRouteImport.update({
+  id: '/adminlogin',
+  path: '/adminlogin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -104,6 +110,7 @@ const AdminDiaDiemIdRoute = AdminDiaDiemIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/adminlogin': typeof AdminloginRoute
   '/am-thuc': typeof AmThucRoute
   '/da-luu': typeof DaLuuRoute
   '/lich-trinh': typeof LichTrinhRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/adminlogin': typeof AdminloginRoute
   '/am-thuc': typeof AmThucRoute
   '/da-luu': typeof DaLuuRoute
   '/lich-trinh': typeof LichTrinhRoute
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/adminlogin': typeof AdminloginRoute
   '/am-thuc': typeof AmThucRoute
   '/da-luu': typeof DaLuuRoute
   '/lich-trinh': typeof LichTrinhRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/adminlogin'
     | '/am-thuc'
     | '/da-luu'
     | '/lich-trinh'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/adminlogin'
     | '/am-thuc'
     | '/da-luu'
     | '/lich-trinh'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/adminlogin'
     | '/am-thuc'
     | '/da-luu'
     | '/lich-trinh'
@@ -208,6 +220,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AdminloginRoute: typeof AdminloginRoute
   AmThucRoute: typeof AmThucRoute
   DaLuuRoute: typeof DaLuuRoute
   LichTrinhRoute: typeof LichTrinhRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/am-thuc'
       fullPath: '/am-thuc'
       preLoaderRoute: typeof AmThucRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/adminlogin': {
+      id: '/adminlogin'
+      path: '/adminlogin'
+      fullPath: '/adminlogin'
+      preLoaderRoute: typeof AdminloginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -349,6 +369,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AdminloginRoute: AdminloginRoute,
   AmThucRoute: AmThucRoute,
   DaLuuRoute: DaLuuRoute,
   LichTrinhRoute: LichTrinhRoute,
@@ -361,12 +382,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
