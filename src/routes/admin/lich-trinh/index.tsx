@@ -39,7 +39,7 @@ function ItineraryList() {
         .select("*")
         .order("duration_days");
       if (error) throw error;
-      return data as Itinerary[];
+      return data as unknown as Itinerary[];
     },
   });
 
@@ -63,9 +63,9 @@ function ItineraryList() {
           <p className="mt-1 text-sm text-muted-foreground">Tạo và chỉnh sửa các lịch trình du lịch</p>
         </div>
         <Button asChild>
-          <Link to="/admin/lich-trinh/moi">
+          <a href="/admin/lich-trinh/moi">
             <Plus className="mr-2 h-4 w-4" /> Thêm mới
-          </Link>
+          </a>
         </Button>
       </div>
 
@@ -132,7 +132,7 @@ function EditDialog({ id, onClose }: { id: string; onClose: () => void }) {
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Partial<Itinerary>) => {
-      const { error } = await supabase.from("itineraries").update(updates).eq("id", id);
+      const { error } = await supabase.from("itineraries").update(updates as never).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

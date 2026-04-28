@@ -67,7 +67,7 @@ function AdminDashboard() {
         <div className="flex items-center justify-between border-b border-border p-5">
           <h2 className="font-display text-lg font-bold text-foreground">Địa điểm mới nhất</h2>
           <Button asChild size="sm" variant="outline">
-            <Link to="/admin/dia-diem/moi"><Plus className="mr-1 h-4 w-4" /> Thêm mới</Link>
+            <Link to="/admin/dia-diem/$id" params={{ id: "moi" }}><Plus className="mr-1 h-4 w-4" /> Thêm mới</Link>
           </Button>
         </div>
         <div className="divide-y divide-border">

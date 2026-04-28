@@ -80,8 +80,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function checkAdmin() {
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) return false;
     const { data, error } = await supabase.rpc("has_role", {
-      check_role: "admin"
+      _user_id: userData.user.id,
+      _role: "admin",
     });
 
     if (error) {
