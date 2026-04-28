@@ -21,69 +21,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-    let roleCheckVersion = 0;
+    let active = true;
+    let requestId = 0;
 
-    const applySessionState = (newSession: Session | null) => {
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-    };
+    async function applyAuthState(nextSession: Session | null) {
+      const id = ++requestId;
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
 
-    const syncAdminRole = async (newSession: Session | null) => {
-      const currentVersion = ++roleCheckVersion;
-
-      if (!newSession?.user) {
-        if (isMounted && currentVersion === roleCheckVersion) {
+      if (!nextSession?.user) {
+        if (active && id === requestId) {
           setIsAdmin(false);
           setLoading(false);
         }
         return;
       }
 
-      const admin = await checkAdmin();
-      if (isMounted && currentVersion === roleCheckVersion) {
+      setLoading(true);
+      const admin = await checkAdmin(nextSession.user.id);
+      if (active && id === requestId) {
         setIsAdmin(admin);
         setLoading(false);
       }
-    };
+    }
 
-    // Set up listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
-      applySessionState(newSession);
-
-      if (!newSession?.user) {
-        setIsAdmin(false);
-        setLoading(false);
-        return;
-      }
-
-      if (event === "TOKEN_REFRESHED") return;
-
-      setLoading(true);
-      setTimeout(() => {
-        void syncAdminRole(newSession);
-      }, 0);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      void applyAuthState(nextSession);
     });
 
-    // Then check existing session
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!isMounted) return;
-      setLoading(true);
-      applySessionState(data.session);
-      await syncAdminRole(data.session);
-    });
+    void supabase.auth.getSession().then(({ data }) => applyAuthState(data.session));
 
     return () => {
-      isMounted = false;
+      active = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  async function checkAdmin() {
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) return false;
+  async function checkAdmin(userId: string) {
     const { data, error } = await supabase.rpc("has_role", {
-      _user_id: userData.user.id,
+      _user_id: userId,
       _role: "admin",
     });
 

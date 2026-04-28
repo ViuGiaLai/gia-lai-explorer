@@ -1,11 +1,7 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { Mountain, ShieldCheck, Eye, EyeOff, ChevronRight } from "lucide-react";
-import { toast } from "sonner";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Đăng nhập admin — Du Lịch Gia Lai" }] }),
@@ -14,13 +10,14 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const { signIn, signUp, session, isAdmin, loading } = useAuth();
+  const { session, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [notice, setNotice] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
+  const [createdUserId, setCreatedUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && session && isAdmin) {
@@ -31,133 +28,136 @@ function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    const fn = mode === "signin" ? signIn : signUp;
-    const { error } = await fn(email, password);
+    setNotice(null);
+    setCreatedUserId(null);
+
+    const result = mode === "signin"
+      ? await supabase.auth.signInWithPassword({ email, password })
+      : await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/admin` : undefined,
+          },
+        });
+
     setSubmitting(false);
-    if (error) {
-      toast.error(error);
+
+    if (result.error) {
+      setNotice({ type: "error", text: result.error.message });
       return;
     }
+
     if (mode === "signup") {
-      toast.success("Đã tạo tài khoản. Liên hệ quản trị để được cấp quyền admin.");
+      setCreatedUserId(result.data.user?.id ?? null);
+      setNotice({ type: "success", text: "Đã tạo tài khoản. Hãy gửi User ID bên dưới để cấp quyền admin." });
     } else {
-      toast.success("Đăng nhập thành công. Đang chuyển hướng...");
-      // Wait a tick for isAdmin to be updated by auth state change listener
-      setTimeout(() => {
-        navigate({ to: "/admin" });
-      }, 100);
+      setNotice({ type: "success", text: "Đăng nhập thành công. Đang chuyển tới CMS..." });
+      window.setTimeout(() => navigate({ to: "/admin" }), 250);
     }
   }
 
+  async function copyUserId() {
+    const id = createdUserId ?? session?.user.id;
+    if (!id) return;
+    await navigator.clipboard.writeText(id);
+    setNotice({ type: "success", text: "Đã copy User ID." });
+  }
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-background to-earth/10" />
-      <div className="absolute -left-32 -top-24 h-80 w-80 rounded-full bg-primary/20 blur-3xl" />
-      <div className="absolute -bottom-20 -right-24 h-96 w-96 rounded-full bg-sun/25 blur-3xl" />
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground">
+      <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-xl flex-col justify-center">
+        <Link to="/" className="mb-6 text-sm font-semibold text-primary hover:underline">
+          ← Về trang chủ
+        </Link>
 
-      <div className="relative z-10 mx-auto grid min-h-screen w-full max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:px-8">
-        <section className="hidden md:block">
-          <Link to="/" className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-2 text-sm backdrop-blur">
-            <Mountain className="h-4 w-4 text-primary" />
-            Du Lịch Gia Lai
-          </Link>
-          <h1 className="mt-6 font-display text-5xl font-bold leading-tight text-foreground">
-            Quản trị nội dung <span className="text-primary">nhanh, gọn, an toàn</span>
-          </h1>
-          <p className="mt-4 max-w-lg text-base text-muted-foreground">
-            Đăng nhập để quản lý địa điểm, lịch trình và ẩm thực Gia Lai. Giao diện mới tối ưu thao tác, dễ nhìn và mượt hơn.
-          </p>
-          <ul className="mt-8 space-y-3 text-sm">
-            <li className="flex items-center gap-2 text-foreground/90">
-              <ShieldCheck className="h-4 w-4 text-primary" /> Bảo mật bằng Supabase Auth
-            </li>
-            <li className="flex items-center gap-2 text-foreground/90">
-              <ShieldCheck className="h-4 w-4 text-primary" /> Kiểm tra quyền admin tự động
-            </li>
-            <li className="flex items-center gap-2 text-foreground/90">
-              <ShieldCheck className="h-4 w-4 text-primary" /> Truy cập CMS trực tiếp sau khi đăng nhập
-            </li>
-          </ul>
-        </section>
-
-        <section className="w-full">
-          <div className="mx-auto w-full max-w-md rounded-3xl border border-border/60 bg-card/90 p-6 shadow-elegant backdrop-blur md:p-8">
-            <Link to="/" className="mb-4 inline-flex items-center gap-2 font-display text-xl font-bold text-primary md:hidden">
-              <Mountain className="h-6 w-6" /> Du Lịch Gia Lai
-            </Link>
-            <h2 className="font-display text-3xl font-bold text-foreground">
-              {mode === "signin" ? "Đăng nhập Admin" : "Tạo tài khoản"}
-            </h2>
+        <section className="rounded-lg border border-border bg-card p-5 shadow-card sm:p-7">
+          <div className="mb-6">
+            <p className="text-sm font-semibold text-primary">Gia Lai CMS</p>
+            <h1 className="mt-2 font-display text-3xl font-bold text-foreground">
+              {mode === "signin" ? "Đăng nhập admin" : "Tạo tài khoản admin"}
+            </h1>
             <p className="mt-2 text-sm text-muted-foreground">
               {mode === "signin"
-                ? "Nhập email và mật khẩu để vào trang quản trị."
-                : "Tạo tài khoản mới, sau đó cần được cấp quyền admin."}
+                ? "Dùng email và mật khẩu đã đăng ký để vào trang quản trị."
+                : "Sau khi tạo tài khoản, copy User ID gửi lại để được cấp quyền admin."}
             </p>
+          </div>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 h-11"
-                  placeholder="admin@example.com"
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <label className="block text-sm font-medium text-foreground" htmlFor="email">
+              Email
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="mt-2 h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                placeholder="admin@example.com"
+              />
+            </label>
 
-              <div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Mật khẩu</Label>
-                  {loading && <span className="text-xs text-muted-foreground">Đang kiểm tra phiên...</span>}
-                </div>
-                <div className="relative mt-1">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    minLength={6}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 pr-10"
-                    placeholder="••••••••"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button type="submit" className="h-11 w-full" disabled={submitting || loading}>
-                {submitting ? "Đang xử lý..." : mode === "signin" ? "Đăng nhập" : "Đăng ký"}
-                {!submitting && <ChevronRight className="ml-1 h-4 w-4" />}
-              </Button>
-            </form>
+            <label className="block text-sm font-medium text-foreground" htmlFor="password">
+              Mật khẩu
+              <input
+                id="password"
+                type="password"
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                required
+                minLength={6}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="mt-2 h-11 w-full rounded-md border border-input bg-background px-3 text-base text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                placeholder="Tối thiểu 6 ký tự"
+              />
+            </label>
 
             <button
-              type="button"
-              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="mt-4 w-full rounded-lg border border-transparent py-2 text-center text-sm text-muted-foreground transition hover:border-border hover:text-primary"
+              type="submit"
+              disabled={submitting || loading}
+              className="h-11 w-full rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {mode === "signin" ? "Chưa có tài khoản? Tạo tài khoản" : "Đã có tài khoản? Đăng nhập"}
+              {submitting ? "Đang xử lý..." : mode === "signin" ? "Đăng nhập" : "Đăng ký"}
             </button>
+          </form>
 
-            {session && !isAdmin && (
-              <div className="mt-4 rounded-xl border border-sun/30 bg-sun/10 p-3 text-xs text-foreground/85">
-                Bạn đã đăng nhập nhưng chưa có quyền admin. Hãy liên hệ quản trị để được cấp quyền.
-                <br />User ID: <code className="font-mono">{session.user.id}</code>
-              </div>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === "signin" ? "signup" : "signin");
+              setNotice(null);
+              setCreatedUserId(null);
+            }}
+            className="mt-4 w-full rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
+          >
+            {mode === "signin" ? "Chưa có tài khoản? Đăng ký" : "Đã có tài khoản? Đăng nhập"}
+          </button>
+
+          {notice && (
+            <p className={`mt-4 rounded-md border p-3 text-sm ${notice.type === "error" ? "border-destructive/30 bg-destructive/10 text-destructive" : "border-primary/25 bg-primary/10 text-foreground"}`}>
+              {notice.text}
+            </p>
+          )}
+
+          {(createdUserId || (session && !isAdmin)) && (
+            <div className="mt-4 rounded-md border border-sun/30 bg-sun/10 p-3 text-sm text-foreground">
+              <p className="font-medium">User ID</p>
+              <code className="mt-2 block select-all break-all rounded-md border border-border bg-background p-2 font-mono text-xs">
+                {createdUserId ?? session?.user.id}
+              </code>
+              <button
+                type="button"
+                onClick={copyUserId}
+                className="mt-3 rounded-md bg-secondary px-3 py-2 text-sm font-medium text-secondary-foreground transition hover:bg-muted"
+              >
+                Copy User ID
+              </button>
+            </div>
+          )}
         </section>
       </div>
-    </div>
+    </main>
   );
 }
