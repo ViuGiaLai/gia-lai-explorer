@@ -39,7 +39,7 @@ function ItineraryList() {
         .select("*")
         .order("duration_days");
       if (error) throw error;
-      return data as Itinerary[];
+      return data as unknown as Itinerary[];
     },
   });
 
