@@ -63,7 +63,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <html lang="vi">
       <head>
         <HeadContent />
       </head>
@@ -71,7 +71,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
         {children}
         <Scripts />
       </body>
-    </>
+    </html>
   );
 }
 
