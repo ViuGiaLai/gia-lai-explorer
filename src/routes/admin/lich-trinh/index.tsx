@@ -63,9 +63,9 @@ function ItineraryList() {
           <p className="mt-1 text-sm text-muted-foreground">Tạo và chỉnh sửa các lịch trình du lịch</p>
         </div>
         <Button asChild>
-          <Link to="/admin/lich-trinh/moi">
+          <a href="/admin/lich-trinh/moi">
             <Plus className="mr-2 h-4 w-4" /> Thêm mới
-          </Link>
+          </a>
         </Button>
       </div>
 
